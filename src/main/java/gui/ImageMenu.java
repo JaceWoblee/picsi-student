@@ -1,7 +1,7 @@
 package gui;
 
 import imageprocessing.GrayScale;
-import imageprocessing.fourier.Dithering;
+import imageprocessing.Dithering;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -36,7 +36,5 @@ public class ImageMenu extends UserMenu {
         channels.add("G\tCtrl+2", SWT.CTRL | '2', new ChannelRGBA(1));
         channels.add("B\tCtrl+3", SWT.CTRL | '3', new ChannelRGBA(2));
         channels.add("A\tCtrl+4", SWT.CTRL | '4', new ChannelRGBA(3));
-
-        // TODO add here further image processing entries (they are inserted into the Image menu)
     }
 }
