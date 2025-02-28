@@ -1,11 +1,9 @@
 package gui;
 
-import imageprocessing.GrayScale;
-import imageprocessing.Dithering;
+import imageprocessing.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MenuItem;
 
-import imageprocessing.Cropping;
 import imageprocessing.colors.ChannelRGBA;
 import imageprocessing.colors.Inverter;
 
@@ -30,6 +28,10 @@ public class ImageMenu extends UserMenu {
         add("&Invert\tF1", SWT.F1, new Inverter());
         add("GrayScale\tF2", SWT.F2, new GrayScale());
         add("Dithering\tF3", SWT.F3, new Dithering());
+        add("Rotate\tF4", SWT.F4, new Rotate());
+        add("Affine\tF5", SWT.F5, new Affine());
+        add("Scale\tF6", SWT.F6, new Scale());
+
 
         UserMenu channels = addMenu("Channel");
         channels.add("R\tCtrl+1", SWT.CTRL | '1', new ChannelRGBA(0));

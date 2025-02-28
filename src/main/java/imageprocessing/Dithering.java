@@ -8,7 +8,6 @@ import utils.Parallel;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Dithering implements IImageProcessor {
-    int m_channel;
 
     @Override
     public boolean isEnabled(int imageType) {
