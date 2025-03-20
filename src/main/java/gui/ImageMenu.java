@@ -31,6 +31,8 @@ public class ImageMenu extends UserMenu {
         add("Rotate\tF4", SWT.F4, new Rotate());
         add("Affine\tF5", SWT.F5, new Affine());
         add("Scale\tF6", SWT.F6, new Scale());
+        add("Contrasting\tF7", SWT.F7, new Contrasting());
+        add("LinContrasting\tF8", SWT.F8, new LinContrasting());
 
 
         UserMenu channels = addMenu("Channel");

@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 import main.Picsi;
+import utils.Matrix;
 import utils.Parallel;
 
 /**
@@ -125,6 +126,17 @@ public class ImageProcessing {
 	public static double[] psnr(ImageData inData1, ImageData inData2, int imageType) {
 		// TODO
 		return null;
+	}
+
+	public static ImageData applyLUT(ImageData inData, int[] lut){
+		ImageData outData = (ImageData)inData.clone();
+
+		Parallel.For(0, outData.width, i -> {
+			for (int j = 0; j < outData.height; j++) {
+				outData.setPixel(i,j,lut[inData.getPixel(i,j)]);
+			}
+		});
+		return outData;
 	}
 	
 	/**
