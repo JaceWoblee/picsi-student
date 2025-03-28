@@ -1,6 +1,7 @@
 package gui;
 
 import imageprocessing.*;
+import imageprocessing.segmentation.FloodFilling;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -33,7 +34,8 @@ public class ImageMenu extends UserMenu {
         add("Scale\tF6", SWT.F6, new Scale());
         add("Contrasting\tF7", SWT.F7, new Contrasting());
         add("LinContrasting\tF8", SWT.F8, new LinContrasting());
-
+        add("Binarize\tF9", SWT.F9, new Binarization());
+        add("Flood\tF10", SWT.F10, new FloodFilling());
 
         UserMenu channels = addMenu("Channel");
         channels.add("R\tCtrl+1", SWT.CTRL | '1', new ChannelRGBA(0));
