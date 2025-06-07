@@ -12,17 +12,15 @@ import org.eclipse.swt.graphics.RGB;
 import imageprocessing.IImageProcessor;
 import imageprocessing.ImageProcessing;
 import main.Picsi;
-import org.w3c.dom.css.RGBColor;
-import utils.Parallel;
 
 /**
  * Flood Filling
- * @author Christoph Stamm
+ * @author Yasha Lüscher
  *
  */
 public class FloodFilling implements IImageProcessor {
-	public static int s_background = 0; // white
-	public static int s_foreground = 1; // black
+	public static int s_background = 1;
+	public static int s_foreground = 0;
 
 	@Override
 	public boolean isEnabled(int imageType) {
@@ -32,22 +30,19 @@ public class FloodFilling implements IImageProcessor {
 	@Override
 	public ImageData run(ImageData inData, int imageType) {
 		final int threshold = Binarization.otsuThreshold(inData);
-		ImageData grayData = inData;
+		ImageData processedData = inData;
 
-		grayData = Binarization.binarization(grayData, threshold, false, false);
+		processedData = Binarization.binarization(processedData, threshold, false, false);
 
-		int nLabels = floodFill(grayData);
-		System.out.println("Anzahl Mnzen: " + nLabels);
+		processedData = imageprocessing.SaltAndPepperFilter.applyClosing(processedData);
+		processedData = imageprocessing.SaltAndPepperFilter.applyOpening(processedData);
 
-		//return falseColor(grayData, nLabels + 2);
-		return falseColor(grayData,nLabels + 2);
+		int nLabels = floodFill(processedData);
+		System.out.println("Anzahl Münzen: " + nLabels);
+
+		return falseColor(processedData, nLabels + 2);
 	}
 
-	/**
-	 * Labeling of a binarized grayscale image
-	 * @param inData input: grayscale image with intensities 0 and 1 only, output: labeled foreground regions
-	 * @return number of regions
-	 */
 	public static int floodFill(ImageData imageData) {
 		assert ImageProcessing.determineImageType(imageData) == Picsi.IMAGE_TYPE_GRAY;
 		int currentLabel = 2;
@@ -67,17 +62,18 @@ public class FloodFilling implements IImageProcessor {
 							continue;
 						}
 
-						imageData.setPixel(x, y, currentLabel*10);
-						if(y > 0 && imageData.getPixel(x, y - 1) == s_foreground) {
+						imageData.setPixel(x, y, currentLabel * 10);
+
+						if (y > 0 && imageData.getPixel(x, y - 1) == s_foreground) {
 							queue.add(new int[] {x, y - 1});
 						}
-						if(x < imageData.width - 1 && imageData.getPixel(x + 1, y) == s_foreground) {
+						if (x < imageData.width - 1 && imageData.getPixel(x + 1, y) == s_foreground) {
 							queue.add(new int[] {x + 1, y});
 						}
-						if(y < imageData.height - 1 && imageData.getPixel(x, y + 1) == s_foreground) {
+						if (y < imageData.height - 1 && imageData.getPixel(x, y + 1) == s_foreground) {
 							queue.add(new int[] {x, y + 1});
 						}
-						if(x > 0 && imageData.getPixel(x - 1, y) == s_foreground) {
+						if (x > 0 && imageData.getPixel(x - 1, y) == s_foreground) {
 							queue.add(new int[] {x - 1, y});
 						}
 					}
@@ -90,37 +86,38 @@ public class FloodFilling implements IImageProcessor {
 	}
 
 	/**
-	 * False color presentation of labeled grayscale image
+	 * Creates a new, safe false-color presentation of a labeled grayscale image.
 	 * @param inData labeled grayscale image
 	 * @param n number of different false colors (<= 256)
-	 * @return indexed color image
+	 * @return A new, valid indexed-color image
 	 */
 	public static ImageData falseColor(ImageData inData, int n) {
 		assert ImageProcessing.determineImageType(inData) == Picsi.IMAGE_TYPE_GRAY;
 		assert 0 < n && n <= 256;
 
-		RGB[] palette = new RGB[n];
+		RGB[] colors = new RGB[n];
 
-		palette[0] = new RGB(255,255,255);
+		colors[0] = new RGB(0, 0, 0);
 
 		Random rand = new Random(42);
 		for (int i = 1; i < n; i++){
-			palette[i] = new RGB(
+			colors[i] = new RGB(
 					rand.nextInt(256),
 					rand.nextInt(256),
 					rand.nextInt(256)
 			);
 		}
-		inData.palette = new PaletteData(palette);
+		PaletteData newPalette = new PaletteData(colors);
 
-		for (int v = 0; v < inData.height; v++) {
-			for (int u = 0; u < inData.width; u++) {
+		ImageData outData = new ImageData(inData.width, inData.height, 8, newPalette);
+
+		for (int v = 0; v < outData.height; v++) {
+			for (int u = 0; u < outData.width; u++) {
 				int label = inData.getPixel(u, v);
-				int colorIndex = (label == 0) ? 0 : (label/10 - 1);
-				inData.setPixel(u, v, colorIndex);
+				int colorIndex = (label == s_background) ? 0 : (label / 10 - 1);
+				outData.setPixel(u, v, colorIndex);
 			}
 		}
-
-		return inData;
+		return outData;
 	}
 }

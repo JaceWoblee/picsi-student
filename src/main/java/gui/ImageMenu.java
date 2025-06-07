@@ -36,6 +36,8 @@ public class ImageMenu extends UserMenu {
         add("LinContrasting\tF8", SWT.F8, new LinContrasting());
         add("Binarize\tF9", SWT.F9, new Binarization());
         add("Flood\tF10", SWT.F10, new FloodFilling());
+        add("Dialate\tF11", SWT.F11, new MorphologicFilter());
+        add("ParticleAnalyzer\tF12", SWT.F12, new ParticleAnalyzer());
 
         UserMenu channels = addMenu("Channel");
         channels.add("R\tCtrl+1", SWT.CTRL | '1', new ChannelRGBA(0));

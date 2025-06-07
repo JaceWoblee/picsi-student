@@ -2,8 +2,6 @@ package imageprocessing;
 
 import org.eclipse.swt.graphics.ImageData;
 
-import java.sql.SQLOutput;
-
 /**
  * Image inverter
  *
@@ -19,7 +17,6 @@ public class Contrasting implements IImageProcessor {
     @Override
     public ImageData run(ImageData inData, int imageType) {
         ImageData outData = (ImageData) inData.clone();
-
 
         return contrast(outData);
     }

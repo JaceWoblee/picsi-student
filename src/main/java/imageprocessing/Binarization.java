@@ -9,7 +9,7 @@ import utils.Parallel;
  * Image segmentation (binarization) using Otsu's method
  * Image foreground = black
  * Palette: background, foreground
- * @author Christoph Stamm
+ * @author Yasha Lüscher
  *
  */
 public class Binarization implements IImageProcessor {
@@ -38,7 +38,6 @@ public class Binarization implements IImageProcessor {
 	 * @return binarized image
 	 */
 	public static ImageData binarization(ImageData inData, int threshold, boolean smallValuesAreForeground, boolean binary) {
-		//assert Picsi.determineImageType(inData) == Picsi.IMAGE_TYPE_GRAY;
 
 		ImageData outData = ImageProcessing.createImage(inData.width, inData.height, (binary) ? Picsi.IMAGE_TYPE_BINARY : Picsi.IMAGE_TYPE_GRAY);
 		final int fg = (smallValuesAreForeground) ? s_foreground : s_background;
@@ -72,14 +71,12 @@ public class Binarization implements IImageProcessor {
 
 		// Try each possible threshold value
 		for (int t = 0; t < 255; t++) {
-			// Calculate class probabilities
 			double p0 = 0;  // P0(t)
 			for (int i = 0; i <= t; i++) {
 				p0 += p[i];
 			}
 			double p1 = 1 - p0;  // P1(t)
 
-			// Calculate class means
 			double m0 = 0;  // μ0
 			for (int i = 0; i <= t; i++) {
 				m0 += i * p[i];
@@ -92,13 +89,10 @@ public class Binarization implements IImageProcessor {
 			}
 			m1 = (p1 != 0) ? m1/p1 : 0;
 
-			// Calculate global mean
 			double m = m0 * p0 + m1 * p1;
 
-			// Calculate interclass variance
 			double interVar = p0 * (m0 - m) * (m0 - m) + p1 * (m1 - m) * (m1 - m);
 
-			// Update best threshold if we found a better interclass variance
 			if (interVar > maxInterVar) {
 				maxInterVar = interVar;
 				bestThreshold = t;
