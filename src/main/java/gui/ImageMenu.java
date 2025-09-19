@@ -38,6 +38,7 @@ public class ImageMenu extends UserMenu {
         add("Flood\tF10", SWT.F10, new FloodFilling());
         add("Dialate\tF11", SWT.F11, new MorphologicFilter());
         add("ParticleAnalyzer\tF12", SWT.F12, new ParticleAnalyzer());
+        add("Debayering", 0, new Debayering());
 
         UserMenu channels = addMenu("Channel");
         channels.add("R\tCtrl+1", SWT.CTRL | '1', new ChannelRGBA(0));
