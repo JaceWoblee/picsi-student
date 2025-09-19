@@ -27,9 +27,7 @@ public class GrayScale implements IImageProcessor {
         Parallel.For(0, inData.height, v -> {
             for (int u = 0; u < inData.width; u++) {
                 RGB rgb = inData.palette.getRGB(inData.getPixel(u, v));
-                int gray = (rgb.red * 20 + rgb.green * 70 + rgb.blue * 10) / 100;
-
-                outData.setPixel(u, v, gray);
+                outData.setPixel(u, v, (rgb.red * 20 + rgb.green * 70 + rgb.blue * 10) / 100);
             }
         });
         return outData;
