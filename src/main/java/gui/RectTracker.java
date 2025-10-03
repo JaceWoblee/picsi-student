@@ -117,5 +117,4 @@ public class RectTracker {
 			Picsi.getTwinView().m_mainWnd.setEnabledMenu(true);
 		}
 	}
-
 }
